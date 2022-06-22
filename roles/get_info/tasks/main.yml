@@ -1,0 +1,55 @@
+---
+#############################################################################################
+#
+# Use Shell module to reach out to get user information
+#
+#############################################################################################
+- name: Get group list info
+  shell: "id -nG {{ user }} | grep -v Last | tail -1"
+  register: group_list
+
+- name: get perms info
+  shell: "ls -ld /home/{{ user }} | grep -v Last | tail -1 | awk '{print $1}'"
+  register: perms
+
+- name: get owner info
+  shell: "ls -ld /home/{{ user }} | grep -v Last | tail -1 | awk '{print $2}'"
+  register: owner
+
+- name: get group info
+  shell: "ls -ld /home/{{ user }} | grep -v Last | tail -1 | awk '{print $3}'"
+  register: group
+
+- name: get dirsize info
+  shell: "du -sm /home/{{ user }} | grep -v Last | tail -1 | awk '{print $1}'"
+  register: dirsize
+
+- name: get dirsizes info
+  shell: "grep ^{{ user }}: /tmp/*homesizes | cut -d':' -f2"
+  register: dirsizes
+
+- name: get lastlogin info
+  shell: "ls -la /home/{{ user }}/.login | grep -v Last | tail -1 | awk '{print $6,$7}'"
+  register: lastlogin
+
+- name: get homedir info
+  shell: "ls -d /home/{{ user }} | cut -d'/' -f3"
+  register: homedir
+
+- name: get backup info
+  shell: "cd /home/backups; ls -d {{ user }}.tgz"
+  register: backup
+  ignore_errors: yes
+
+- debug:
+    msg: '{{ item.stdout_lines }}'
+  loop:
+    - '{{backup}}'
+    - '{{homedir}}'
+    - '{{lastlogin}}'
+    - '{{dirsizes}}'
+    - '{{dirsize}}'
+    - '{{group}}'
+    - '{{owner}}'
+    - '{{perms}}'
+    - '{{group_list}}'

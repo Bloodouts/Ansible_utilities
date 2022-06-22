@@ -1,0 +1,28 @@
+---
+#############################################################################################
+#
+# Uses user module to create directory and template module to copy default file into it 
+#
+#############################################################################################
+- name: Create User Account
+  user:
+    name: '{{ user }}'
+    createhome: yes
+    home: '/home/{{ user }}'
+
+- name: Copy config files
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: root
+    group: root
+    mode: '750'
+  loop:
+    - { src: '.bashrc.j2', dest: '/home/{{ user }}'}
+    - { src: '.bash_logout.j2', dest: '/home/{{ user }}'}
+    - { src: '.bash_profile.j2', dest: '/home/{{ user }}'}
+    - { src: '.bashrc.local.j2', dest: '/home/{{ user }}'}
+    - { src: '.cshrc.j2', dest: '/home/{{ user }}'}
+    - { src: '.cshrc.local.j2', dest: '/home/{{ user }}'}
+    - { src: '.tcshrc.j2', dest: '/home/{{ user }}'}
+    - { src: '.tcshrc.local.j2', dest: '/home/{{ user }}'}

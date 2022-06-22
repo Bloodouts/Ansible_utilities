@@ -1,0 +1,38 @@
+---
+- name: Copy direcotry to new location
+  hosts: '{{ src_server }}'
+  ignore_unreachable: yes
+  become: true
+  become_method: sudo
+
+#############################################################################################
+#
+# Can remove variable prompts once set up in Tower. 
+# These variables will be replace with:
+# example: --extra-vars '{"user":"testuser","src_server":"testserver"}'
+#
+#############################################################################################
+
+  vars_prompt:
+  - name: user
+    prompt: 'Enter user'
+    private: no
+  
+  - name: src_server
+    prompt: 'Enter server source'
+    default: "testserver"
+    private: no
+
+  - name: dest_server
+    prompt: 'Enter server destination'
+    default: "testserver"
+    private: no
+
+  - name: dest_dir
+    prompt: 'Enter directory destination'
+    default: "/home/backups"
+    private: no
+
+  roles:
+    - role: copy_homedir
+

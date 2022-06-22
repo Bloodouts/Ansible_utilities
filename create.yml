@@ -1,0 +1,21 @@
+---
+- name: Create user home directory
+  hosts: all
+  become: true
+  become_method: sudo
+
+#############################################################################################
+#
+# Can remove variable prompts once set up in Tower. 
+# These variables will be replace with:
+# example: --extra-vars '{"user":"testuser","src_server":"testserver"}'
+#
+#############################################################################################
+
+  vars_prompt:
+    - name: user
+      prompt: 'Enter user'
+      private: no
+
+  roles:
+    - role: create_homedir

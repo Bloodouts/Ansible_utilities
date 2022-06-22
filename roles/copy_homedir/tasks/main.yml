@@ -1,0 +1,13 @@
+---
+#############################################################################################
+#
+# Uses Synchronize module to pull directory from src_server to destination 
+#
+#############################################################################################
+- name: Synchronize directory
+  synchronize:
+    src: /home/{{ user }}
+    dest: '{{ dest_dir }}'
+    mode: pull
+  delegate_to: '{{ src_server }}'
+
